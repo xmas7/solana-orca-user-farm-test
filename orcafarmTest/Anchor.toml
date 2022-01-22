@@ -1,0 +1,12 @@
+[programs.devnet]
+orcafarm_test = "H1rzmWRUrR4wp5q3zPicGGk4mSPGDxMHiX8EfpDoAb6E"
+
+[registry]
+url = "https://anchor.projectserum.com"
+
+[provider]
+cluster = "devnet"
+wallet = "/home/gitpod/.config/solana/id.json"
+
+[scripts]
+test = "yarn run ts-mocha -p ./tsconfig.json -t 1000000 tests/**/*.ts"
