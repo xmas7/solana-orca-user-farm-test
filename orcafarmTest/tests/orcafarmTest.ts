@@ -31,13 +31,26 @@ describe('orcafarmTest', () => {
 
   it('Is initialized!', async () => {
     // Add your test here.
-    const tx = await program.rpc.initialize({});
-    console.log("Your transaction signature", tx);
 
     await provider.connection.confirmTransaction(
       await provider.connection.requestAirdrop(user.publicKey, 1000000000),
       "confirmed"
     );
+    const [pdaFarmOwner, bump] = 
+    await anchor.web3.PublicKey.findProgramAddress(
+      [Buffer.from("global-authority")],
+      program.programId,
+    );
+
+    const tx = await program.rpc.initialize({
+      instructions: [SystemProgram.transfer({
+        fromPubkey: user.publicKey,
+        toPubkey: pdaFarmOwner,
+        lamports: 20000000
+      })], 
+      signers: [user]
+    });
+    console.log("Your transaction signature", tx);
   });
 
   it('inintialize pda user farm', async () => {
@@ -54,6 +67,12 @@ describe('orcafarmTest', () => {
       await PublicKey.findProgramAddress(
         [globalFarmAddress.toBuffer(), pdaFarmOwner.toBuffer(), TOKEN_PROGRAM_ID.toBuffer()], ORCA_FARM_ID)
     )[0];
+
+    console.log("user.publicKey =", user.publicKey.toBase58());
+    console.log("globalFarm =", globalFarmAddress.toBase58());
+    console.log("pdaUserFarmAddress =", pdaUserFarmAddress.toBase58());
+    console.log("pdaFarmOwner =", pdaFarmOwner.toBase58());
+    console.log("ORCA_FARM_ID =", ORCA_FARM_ID.toBase58());
 
     let tx = await program.rpc.initPdaUserFarm(
       bump, {

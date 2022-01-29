@@ -82,10 +82,9 @@ pub struct InitPdaUserFarm<'info> {
     pub pda_user_farm: AccountInfo<'info>,
 
     #[account(
-        init_if_needed,
+        mut,
         seeds = [AUTHORITY_TAG],
-        bump = bump,
-        payer = payer
+        bump = bump
     )]
     pub farm_owner: Account<'info, GlobalState>,
 
